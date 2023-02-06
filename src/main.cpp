@@ -82,7 +82,7 @@ void loop(){
         if(digitalRead(rows[rowCnt]) && pressedMap[keyLayer][rowCnt][col] == false ){
           switch(keymap[keyLayer][rowCnt][col]){
             case KEY_CAPS_LOCK:
-              capState = !digitalRead(CAPS_LOCK); //add debounce?
+              capState = !digitalRead(CAPS_LOCK);
               digitalWrite(CAPS_LOCK, capState);
               pressedMap[keyLayer][rowCnt][col] = true;
               keyLayer = !capState; //inverted becasue of LED logic
@@ -98,7 +98,7 @@ void loop(){
               keyLayer = capState;
               break;
             case KEY_NUM_LOCK:
-              numState = !digitalRead(NUM_LOCK); //add debounce?
+              numState = !digitalRead(NUM_LOCK);
               digitalWrite(NUM_LOCK, numState);
               pressedMap[keyLayer][rowCnt][col] = true;
               break;
@@ -116,8 +116,8 @@ void loop(){
         else if(!digitalRead(rows[rowCnt]) && pressedMap[keyLayer][rowCnt][col] == true){
           switch(keymap[keyLayer][rowCnt][col]){
             case KEY_LEFT_SHIFT:
-              if(capState) keyLayer = 0; //inverted becasue of LED logic
-              else keyLayer = !capState;
+              if(capState) keyLayer = 0;
+              else keyLayer = !capState; //inverted becasue of LED logic
               bleKeyboard.release(keymap[keyLayer][rowCnt][col]);
               pressedMap[keyLayer][rowCnt][col] = false;
               break;
