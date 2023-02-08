@@ -4,18 +4,19 @@
 #define MATRIX_ROWS 8
 #define MATRIX_COLS 16
 #define MATRIX_LAYERS 2
-#define row1  14
-#define row2  32
-#define row3  15
-#define row4  33
-#define row5  27
-#define row6  12
-#define row7  13
-#define row8  21
+
+#define r0  14
+#define r1  32
+#define r2  15
+#define r3  33
+#define r4  27
+#define r5  12
+#define r6  13
+#define r7  21
 
 const uint8_t KEY_NUM_LOCK = 0xA1;
 
-uint8_t rows[MATRIX_ROWS] = {row1, row2 , row3, row4, row5, row6, row7, row8};
+uint8_t rows[MATRIX_ROWS] = {r0, r1 , r2, r3, r4, r5, r6, r7};
 
 uint8_t keymap[MATRIX_LAYERS][MATRIX_ROWS][MATRIX_COLS] = 
 { {{' ',' ',' ',' ',' ','b',' ','n',' ',' ',KEY_NUM_SLASH,KEY_DOWN_ARROW, KEY_RIGHT_ARROW,KEY_NUM_MINUS,KEY_LEFT_ARROW,KEY_RIGHT_ALT},

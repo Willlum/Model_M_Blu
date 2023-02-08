@@ -11,9 +11,9 @@
 
 PCF8575 PCF(0x20);
 BleKeyboard bleKeyboard;
-int keyLayer;
-int capState = 1;
-int numState = 0;
+volatile int keyLayer = 0;
+volatile int capState = 1;
+volatile int numState = 0;
 char buffer[64];
 
 void setup() {
@@ -47,12 +47,11 @@ void setup() {
 
   //Set all inputs to low on gpio expander
   PCF.write16(0x00);
-  
   for (int i = 0; i < MATRIX_ROWS; i++)
   {
     pinMode(rows[i], INPUT_PULLDOWN);
   }
-  keyLayer = 0;
+  
   bleKeyboard.begin();
 
   while(!bleKeyboard.isConnected()) {
@@ -75,9 +74,8 @@ void loop(){
   for (int colCnt = 0;colCnt < MATRIX_COLS; colCnt++){
     PCF.write(colCnt, HIGH);  
     for (int rowCnt = 0;rowCnt < MATRIX_ROWS; rowCnt++){
-        
-        int col = 15 - colCnt;
-
+        //wiring of controller board was reveresed for simplicity. So indexing is reversed
+        int col = (MATRIX_COLS - 1) - colCnt; 
         //Key pressed for the first time
         if(digitalRead(rows[rowCnt]) && pressedMap[keyLayer][rowCnt][col] == false ){
           switch(keymap[keyLayer][rowCnt][col]){
@@ -102,6 +100,18 @@ void loop(){
               digitalWrite(NUM_LOCK, numState);
               pressedMap[keyLayer][rowCnt][col] = true;
               break;
+            case KEY_PAGE_UP:
+              if(keyLayer == 1){
+                bleKeyboard.press(KEY_MEDIA_VOLUME_UP);
+                pressedMap[keyLayer][rowCnt][col] = true;
+                break;
+              }
+            case KEY_PAGE_DOWN:
+              if(keyLayer == 1){
+                bleKeyboard.press(KEY_MEDIA_VOLUME_DOWN);
+                pressedMap[keyLayer][rowCnt][col] = true;
+                break;
+              }
             default:
               bleKeyboard.press(keymap[keyLayer][rowCnt][col]);
               pressedMap[keyLayer][rowCnt][col] = true;
@@ -111,7 +121,6 @@ void loop(){
               #endif
           }
         }
-      
         //Key released
         else if(!digitalRead(rows[rowCnt]) && pressedMap[keyLayer][rowCnt][col] == true){
           switch(keymap[keyLayer][rowCnt][col]){
